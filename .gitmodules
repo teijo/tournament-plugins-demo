@@ -1,0 +1,6 @@
+[submodule "jquery-group"]
+	path = jquery-group
+	url = git@github.com:teijo/jquery-group.git
+[submodule "jquery-bracket"]
+	path = jquery-bracket
+	url = git@github.com:teijo/jquery-bracket.git
