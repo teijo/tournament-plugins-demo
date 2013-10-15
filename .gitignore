@@ -1,0 +1,6 @@
+node_modules
+.sass-cache
+.idea
+*.iml
+*.swp
+dist/tournament.css
