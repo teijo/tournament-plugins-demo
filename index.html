@@ -96,8 +96,8 @@
 
   var bracketInit = {
     teams : [
-      ["YoDa", "MC"],
-      ["Ret", "First"]
+      [groupInit.teams[0], groupInit.teams[1]],
+      [groupInit.teams[2], groupInit.teams[3]]
     ],
     results : [[
       [[1,2], [3,4]],
@@ -111,8 +111,15 @@
     ]]
   }
 
+  function render_fn(container, data, score) {
+    container.html(customLabeler(data))
+  }
+
   $(function () {
-    $('div#bracket').bracket({init: bracketInit})
+    $('div#bracket').bracket({
+      init: bracketInit,
+      decorator: {render: render_fn, edit: function(){}}
+    })
     $('div#group').group({ init: groupInit, labeler: customLabeler })
   })
   </script>
