@@ -72,31 +72,27 @@
     return faction(team.faction) + ' ' + team.name
   }
 
+  var bracketInit = {
+    teams : [
+      ["YoDa", "MC"],
+      ["Ret", "First"]
+    ],
+    results : [[
+      [[1,2], [3,4]],
+      [[5,6]]
+    ], [
+      [[7,8]],
+      [[9,10]]
+    ], [
+      [[1,12], [13,14]],
+      [[15,16]]
+    ]]
+  }
+
   $(function () {
+    $('div#bracket').bracket({init: bracketInit})
     $('div#group').group({ init: groupInit, labeler: customLabeler })
   })
-  </script>
-  <script>
-    var bracketInit = {
-      teams : [
-        ["YoDa", "MC"],
-        ["Ret", "First"]
-      ],
-      results : [[
-        [[1,2], [3,4]],
-        [[5,6]]
-      ], [
-        [[7,8]],
-        [[9,10]]
-      ], [
-        [[1,12], [13,14]],
-        [[15,16]]
-      ]]
-    }
-
-    $(function () {
-      $('div#bracket').bracket({init: bracketInit})
-    })
   </script>
   <title>Tournament plugin demo page</title>
 </head>
