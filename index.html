@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta name="description" content="Demo page combining jQuery Bracket and Group plugins"/>
+  <meta http-equiv="Content-Type" content="text/html;charset=utf-8"/>
+  <script type="text/javascript" src="lib/jquery-1.8.3.min.js"></script>
+  <script type="text/javascript" src="lib/Bacon-1ab32ffb.min.js"></script>
+  <script type="text/javascript" src="lib/lodash-2.2.1.min.js"></script>
+  <script type="text/javascript" src="lib/live.js"></script>
+  <script type="text/javascript" src="lib/handlebars.1.0.0.js"></script>
+  <script type="text/javascript" src="jquery-group/dist/jquery.group.min.js"></script>
+  <script type="text/javascript" src="jquery-bracket/dist/jquery.bracket.min.js"></script>
+  <link type="text/css" rel="stylesheet" href="jquery-group/dist/jquery.group.min.css"/>
+  <link type="text/css" rel="stylesheet" href="jquery-bracket/dist/jquery.bracket.min.css"/>
+  <style>
+    body {
+      padding: 1%;
+      background-color: #EEE;
+      padding: 0;
+    }
+
+    #group {
+      width: 300px;
+    }
+
+    article {
+      max-width: 780px;
+      background-color: #FFF;
+      padding: 20px;
+      box-sizing: border-box;
+      float: left;
+    }
+  </style>
+  <script class="demo" type='text/javascript' style="font-size: 90%;"
+      >var groupInit = {
+    teams: [
+      {id: 10, name: "YoDa", faction: "t" },
+      {id: 11, name: "First", faction: "p" },
+      {id: 12, name: "MC", faction: "p" },
+      {id: 13, name: "Ret", faction: "z" },
+      {id: 14, name: "Kas", faction: "t" },
+      {id: 15, name: "XIorD", faction: "z" }
+    ],
+    matches: [
+      { "id": 0, "round": 1, "a": { "team": 0, "score": 1 }, "b": { "team": 1, "score": 2 } },
+      { "id": 1, "round": 1, "a": { "team": 0, "score": 2 }, "b": { "team": 2, "score": 1 } },
+      { "id": 2, "round": 1, "a": { "team": 1, "score": 2 }, "b": { "team": 2, "score": 1 } },
+      { "id": 3, "round": 2, "a": { "team": 0, "score": 2 }, "b": { "team": 3, "score": 0 } },
+      { "id": 4, "round": 2, "a": { "team": 1, "score": 0 }, "b": { "team": 3, "score": 2 } },
+      { "id": 5, "round": 2, "a": { "team": 2, "score": 0 }, "b": { "team": 3, "score": 2 } },
+      { "id": 6, "round": 3, "a": { "team": 0, "score": 2 }, "b": { "team": 4, "score": 1 } },
+      { "id": 7, "round": 3, "a": { "team": 1, "score": 2 }, "b": { "team": 4, "score": 0 } },
+      { "id": 8, "round": 3, "a": { "team": 2, "score": 2 }, "b": { "team": 4, "score": 0 } },
+      { "id": 9, "round": 4, "a": { "team": 3, "score": 2 }, "b": { "team": 4, "score": 1 } },
+      { "id": 10, "round": 4, "a": { "team": 0, "score": 2 }, "b": { "team": 5, "score": 0 } },
+      { "id": 11, "round": 4, "a": { "team": 1, "score": 2 }, "b": { "team": 5, "score": 1 } },
+      { "id": 12, "round": 5, "a": { "team": 2, "score": 2 }, "b": { "team": 5, "score": 1 } },
+      { "id": 13, "round": 5, "a": { "team": 3, "score": 2 }, "b": { "team": 5, "score": 0 } },
+      { "id": 14, "round": 5, "a": { "team": 4, "score": 2 }, "b": { "team": 5, "score": 1 } }
+    ]
+  }
+
+  function faction(faction) {
+    colors = { 't': "blue", 'z': "purple", 'p': "goldenrod" }
+    return '<span style="padding: 2px; color: white;'
+        + 'display: inline-block; text-align: center;'
+        + 'font-size: 10px; width: 12px; margin: 0 3px;'
+        + 'background-color: ' + colors[faction] + '">' + faction + '</span>'
+  }
+
+  function customLabeler(team) {
+    return faction(team.faction) + ' ' + team.name
+  }
+
+  $(function () {
+    $('div#group').group({ init: groupInit, labeler: customLabeler })
+  })
+  </script>
+  <script>
+    var bracketInit = {
+      teams : [
+        ["YoDa", "MC"],
+        ["Ret", "First"]
+      ],
+      results : [[
+        [[1,2], [3,4]],
+        [[5,6]]
+      ], [
+        [[7,8]],
+        [[9,10]]
+      ], [
+        [[1,12], [13,14]],
+        [[15,16]]
+      ]]
+    }
+
+    $(function () {
+      $('div#bracket').bracket({init: bracketInit})
+    })
+  </script>
+  <title>Tournament plugin demo page</title>
+</head>
+<body>
+<article>
+  <h1>Tournament plugin demo page</h1>
+
+  <h2>Group stage</h2>
+
+  <div id="group"></div>
+  <p>IEM Season VII - World Championship group B, data from <a href="http://wiki.teamliquid.net/starcraft2/IEM_Season_VII_-_World_Championship">Liquipedia</a></p>
+
+  <h2>Double elimination stage</h2>
+
+  <div id="bracket"></div>
+</article>
+</body>
+</html>
