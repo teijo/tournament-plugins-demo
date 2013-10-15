@@ -12,6 +12,7 @@
   <script type="text/javascript" src="jquery-bracket/dist/jquery.bracket.min.js"></script>
   <link type="text/css" rel="stylesheet" href="jquery-group/dist/jquery.group.min.css"/>
   <link type="text/css" rel="stylesheet" href="jquery-bracket/dist/jquery.bracket.min.css"/>
+  <link type="text/css" rel="stylesheet" href="dist/tournament.min.css"/>
   <style>
     body {
       padding: 1%;
@@ -21,6 +22,14 @@
 
     #group {
       width: 300px;
+      background-color: white;
+      clear: both;
+    }
+
+    #bracket {
+      background-color: white;
+      float: left;
+      clear: both;
     }
 
     #group .rounds {
@@ -33,6 +42,15 @@
       padding: 20px;
       box-sizing: border-box;
       float: left;
+    }
+
+    .wrapper {
+      background-color: #F6F6F6;
+      padding: 20px;
+      float: left;
+      clear: both;
+      width: 100%;
+      box-sizing: border-box;
     }
   </style>
   <script class="demo" type='text/javascript' style="font-size: 90%;"
@@ -106,12 +124,16 @@
 
   <h2>Group stage</h2>
 
-  <div id="group"></div>
+  <div class="wrapper">
+    <div id="group"></div>
+  </div>
   <p>IEM Season VII - World Championship group B, data from <a href="http://wiki.teamliquid.net/starcraft2/IEM_Season_VII_-_World_Championship">Liquipedia</a></p>
 
   <h2>Double elimination stage</h2>
 
-  <div id="bracket"></div>
+  <div class="wrapper">
+    <div id="bracket"></div>
+  </div>
 </article>
 </body>
 </html>
