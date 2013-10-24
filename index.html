@@ -115,12 +115,32 @@
     container.html(customLabeler(data))
   }
 
+  function readResponse() {
+    console.log(arguments)
+  }
+
   $(function () {
     $('div#bracket').bracket({
       init: bracketInit,
       decorator: {render: render_fn, edit: function(){}}
     })
-    $('div#group').group({ init: groupInit, labeler: customLabeler })
+    $('div#group').group({ init: groupInit, labeler: customLabeler,
+      save: function(state) {
+        console.log(state)
+        var url = window.location.origin+":8080/record"
+        $.ajax({type: "GET",
+          url: url,
+          dataType: 'jsonp',
+          jsonp: 'readResponse',
+          accept: 'application/json',
+          crossDomain: true,
+          data: JSON.stringify(state),
+          success: function(response) {
+            console.log(response)
+          }
+        })
+      }
+    })
   })
   </script>
   <title>Tournament plugin demo page</title>
