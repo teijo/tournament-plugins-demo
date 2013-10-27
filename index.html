@@ -118,19 +118,34 @@
     console.log(data)
   }
 
-  function msg(method, data, success) {
-    var url = "http://127.0.0.1:8080/record"
-    $.ajax({type: method,
-      url: url,
-      dataType: 'json',
-      accept: 'application/json',
-      crossDomain: true,
-      data: JSON.stringify(data),
-      success: success
-    })
+  function server(url) {
+    function msg(method, data, success) {
+      var url = url || "http://127.0.0.1:8080/record"
+      $.ajax({type: method,
+        url: url,
+        dataType: 'json',
+        accept: 'application/json',
+        crossDomain: true,
+        data: JSON.stringify(data),
+        success: success
+      })
+    }
+    return {
+      POST: function(data, success) {
+        msg("POST", data, success)
+      },
+      PUT: function(data, success) {
+        msg("PUT", data, success)
+      },
+      GET: function(success) {
+        $.getJSON(url).done(success)
+      }
+    }
   }
 
   $(function () {
+    srv = server()
+
     $('div#bracket').bracket({
       init: bracketInit,
       decorator: {render: render_fn, edit: function(){}}
@@ -138,19 +153,17 @@
 
     $('div#group').group({ init: groupInit, labeler: customLabeler,
       save: function(state) {
-        msg("POST", state, dumpResponse)
+        srv.PUT(state, dumpResponse)
       }
     })
 
     $("input#create").click(function(ev) {
       ev.preventDefault()
       var value = $("select").val()
-      msg("POST", {type: value}, dumpResponse)
+      srv.POST({type: value}, dumpResponse)
     })
 
-    $.getJSON("http://127.0.0.1:8080/record").done(function(data) {
-       $("pre#getData").text(JSON.stringify(data))
-    })
+    srv.GET(function(data) { $("pre#getData").text(JSON.stringify(data)) })
   })
   </script>
   <title>Tournament plugin demo page</title>
