@@ -115,8 +115,20 @@
     container.html(customLabeler(data))
   }
 
-  function readResponse() {
-    console.log(arguments)
+  function dumpResponse(data) {
+    console.log(data)
+  }
+
+  function msg(method, data, success) {
+    var url = "http://127.0.0.1:8080/record"
+    $.ajax({type: method,
+      url: url,
+      dataType: 'json',
+      accept: 'application/json',
+      crossDomain: true,
+      data: JSON.stringify(data),
+      success: success
+    })
   }
 
   $(function () {
@@ -124,22 +136,21 @@
       init: bracketInit,
       decorator: {render: render_fn, edit: function(){}}
     })
+
     $('div#group').group({ init: groupInit, labeler: customLabeler,
       save: function(state) {
-        console.log(state)
-        var url = window.location.origin+":8080/record"
-        $.ajax({type: "GET",
-          url: url,
-          dataType: 'jsonp',
-          jsonp: 'readResponse',
-          accept: 'application/json',
-          crossDomain: true,
-          data: JSON.stringify(state),
-          success: function(response) {
-            console.log(response)
-          }
-        })
+        msg("POST", state, dumpResponse)
       }
+    })
+
+    $("input#create").click(function(ev) {
+      ev.preventDefault()
+      var value = $("select").val()
+      msg("POST", {type: value}, dumpResponse)
+    })
+
+    $.getJSON("http://127.0.0.1:8080/record").done(function(data) {
+       $("pre#getData").text(JSON.stringify(data))
     })
   })
   </script>
@@ -149,14 +160,28 @@
 <article>
   <h1>Tournament plugin demo page</h1>
 
-  <h2>Group stage</h2>
+  <h2>Create new</h2>
+
+  <form action="http://127.0.0.1:8080/record" method="POST">
+    <select>
+      <option value="group">Group</option>
+      <option value="bracket">Bracket</option>
+    </select>
+    <input id="create" type="submit" value="Create" />
+  </form>
+
+  <h2>Read-only</h2>
+
+  <pre id="getData"></pre>
+
+  <h2>Edit group stage</h2>
 
   <div class="wrapper">
     <div id="group"></div>
   </div>
   <p>IEM Season VII - World Championship group B, data from <a href="http://wiki.teamliquid.net/starcraft2/IEM_Season_VII_-_World_Championship">Liquipedia</a></p>
 
-  <h2>Double elimination stage</h2>
+  <h2>Edit bracket</h2>
 
   <div class="wrapper">
     <div id="bracket"></div>
