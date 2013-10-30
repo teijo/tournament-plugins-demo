@@ -115,18 +115,22 @@
   }
 
   function dumpResponse(data) {
+    console.log("RESPONSE")
     console.log(data)
   }
 
   function server(url) {
     function msg(method, data, success) {
       var url = url || "http://127.0.0.1:8080/record"
+      var jsonString = JSON.stringify(data);
+      console.log(method + " REQUEST")
+      console.log(jsonString)
       $.ajax({type: method,
         url: url,
         dataType: 'json',
         accept: 'application/json',
         crossDomain: true,
-        data: JSON.stringify(data),
+        data: jsonString,
         success: success
       })
     }
@@ -148,7 +152,13 @@
 
     $('div#bracket').bracket({
       init: bracketInit,
-      decorator: {render: render_fn, edit: function(){}}
+      decorator: {render: render_fn, edit: function(){}},
+      save: function (state, userData) {
+        state.teams = state.teams.map(function(t) {
+          return t.map(function(it) { return {id: it.id, name: it.name}})
+        })
+        srv.POST(state, dumpResponse)
+      }
     })
 
     $('div#group').group({ init: groupInit, labeler: customLabeler,
