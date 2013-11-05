@@ -51,6 +51,11 @@
       width: 100%;
       box-sizing: border-box;
     }
+
+    #created {
+      list-style: none;
+      padding: 0;
+    }
   </style>
   <script class="demo" type='text/javascript' style="font-size: 90%;"
       >var groupInit = {
@@ -157,20 +162,29 @@
         state.teams = state.teams.map(function(t) {
           return t.map(function(it) { return {id: it.id, name: it.name}})
         })
-        srv.PUT("bracket", state, dumpResponse)
+        srv.PUT("bracket/demo", state, dumpResponse)
       }
     })
 
     $('div#group').group({ init: groupInit, labeler: customLabeler,
       save: function(state) {
-        srv.PUT("group", state, dumpResponse)
+        srv.PUT("group/demo", state, dumpResponse)
       }
     })
 
     $("input#create").click(function(ev) {
       ev.preventDefault()
       var value = $("select").val()
-      srv.POST(value, {type: value}, dumpResponse)
+      srv.POST(value, {type: value}, function(response) {
+        var $container = $('<li></li>').appendTo($('#created'))
+        var setup = {init: response}
+        console.log(response)
+        if (value === 'bracket') {
+          $container.bracket($.extend(setup, {save: function(){}}))
+        } else if (value === 'group') {
+          $container.group($.extend(setup, {save: function(){}}))
+        }
+      })
     })
 
     srv.GET(function(data) { $("pre#getData").text(JSON.stringify(data)) })
@@ -191,6 +205,8 @@
     </select>
     <input id="create" type="submit" value="Create" />
   </form>
+
+  <ul id="created"></ul>
 
   <h2>Read-only</h2>
 
