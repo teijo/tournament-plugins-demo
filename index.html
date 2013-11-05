@@ -148,6 +148,9 @@
       },
       GET: function(type, success) {
         msg("GET", type, null, success)
+      },
+      DELETE: function(type, success) {
+        msg("DELETE", type, null, success)
       }
     }
   }
@@ -155,19 +158,29 @@
   $(function () {
     srv = server()
 
-    srv.GET("bracket", function(response) {
-      var $created = $("#brackets")
-      response.keys.forEach(function(k) {
-        $created.append("<li>"+k+"</li>")
+    ;(function getBrackets() {
+      var $created = $("#brackets").empty()
+      srv.GET("bracket", function(response) {
+        response.keys.forEach(function(k) {
+          $item = $("<li>"+k+"</li>").appendTo($created)
+          $item.click(function() {
+            srv.DELETE("bracket/"+k, getBrackets)
+          })
+        })
       })
-    })
+    })()
 
-    srv.GET("group", function(response) {
-      var $created = $("#groups")
-      response.keys.forEach(function(k) {
-        $created.append("<li>"+k+"</li>")
+    ;(function getGroups() {
+      var $created = $("#groups").empty()
+      srv.GET("group", function(response) {
+        response.keys.forEach(function(k) {
+          $item = $("<li>"+k+"</li>").appendTo($created)
+          $item.click(function() {
+            srv.DELETE("group/"+k, getGroups)
+          })
+        })
       })
-    })
+    })()
 
     $('div#bracket').bracket({
       init: bracketInit,
@@ -218,7 +231,7 @@
     <input id="create" type="submit" value="Create" />
   </form>
 
-  <h3>Existing</h3>
+  <h3>Existing (click to delete)</h3>
   <h4>Groups</h4>
   <ul id="groups"></ul>
   <h4>Brackets</h4>
