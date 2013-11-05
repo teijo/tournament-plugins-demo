@@ -146,14 +146,28 @@
       PUT: function(type, data, success) {
         msg("PUT", type, data, success)
       },
-      GET: function(success) {
-        $.getJSON(url).done(success)
+      GET: function(type, success) {
+        msg("GET", type, null, success)
       }
     }
   }
 
   $(function () {
     srv = server()
+
+    srv.GET("bracket", function(response) {
+      var $created = $("#brackets")
+      response.keys.forEach(function(k) {
+        $created.append("<li>"+k+"</li>")
+      })
+    })
+
+    srv.GET("group", function(response) {
+      var $created = $("#groups")
+      response.keys.forEach(function(k) {
+        $created.append("<li>"+k+"</li>")
+      })
+    })
 
     $('div#bracket').bracket({
       init: bracketInit,
@@ -176,7 +190,7 @@
       ev.preventDefault()
       var value = $("select").val()
       srv.POST(value, {type: value}, function(response) {
-        var $container = $('<li></li>').appendTo($('#created'))
+        var $container = $('<li></li>').appendTo($('#'+value+'s'))
         var setup = {init: response}
         console.log(response)
         if (value === 'bracket') {
@@ -186,8 +200,6 @@
         }
       })
     })
-
-    srv.GET(function(data) { $("pre#getData").text(JSON.stringify(data)) })
   })
   </script>
   <title>Tournament plugin demo page</title>
@@ -206,11 +218,11 @@
     <input id="create" type="submit" value="Create" />
   </form>
 
-  <ul id="created"></ul>
-
-  <h2>Read-only</h2>
-
-  <pre id="getData"></pre>
+  <h3>Existing</h3>
+  <h4>Groups</h4>
+  <ul id="groups"></ul>
+  <h4>Brackets</h4>
+  <ul id="brackets"></ul>
 
   <h2>Edit group stage</h2>
 
