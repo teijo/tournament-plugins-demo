@@ -193,12 +193,6 @@
       }
     })
 
-    $('div#group').group({ init: groupInit, labeler: customLabeler,
-      save: function(state) {
-        srv.PUT("group/demo", state, dumpResponse)
-      }
-    })
-
     $("input#create").click(function(ev) {
       ev.preventDefault()
       var value = $("select").val()
@@ -212,6 +206,26 @@
           $container.group($.extend(setup, {save: function(){}}))
         }
       })
+    })
+
+    function createGroup(init) {
+      $('div#group').group({ init: init, labeler: customLabeler,
+        save: function (state) {
+          srv.PUT("group/importDemo", state, dumpResponse)
+        }
+      })
+    }
+
+    srv.GET("group", function(response) {
+      if (_.contains(response.keys, "importDemo")) {
+        srv.GET("group/importDemo", function(response) {
+          createGroup(response)
+        })
+      }
+    })
+
+    $("#importGroup").click(function() {
+      createGroup(groupInit)
     })
   })
   </script>
@@ -237,7 +251,7 @@
   <h4>Brackets</h4>
   <ul id="brackets"></ul>
 
-  <h2>Edit group stage</h2>
+  <h2>Edit group stage <input type="submit" id="importGroup" value="Import" /></h2>
 
   <div class="wrapper">
     <div id="group"></div>
