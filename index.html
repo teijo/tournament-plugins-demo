@@ -182,15 +182,24 @@
       })
     })()
 
-    $('div#bracket').bracket({
-      init: bracketInit,
-      decorator: {render: render_fn, edit: function(){}},
-      save: function (state, userData) {
-        state.teams = state.teams.map(function(t) {
-          return t.map(function(it) { return {id: it.id, name: it.name}})
-        })
-        srv.PUT("bracket/demo", state, dumpResponse)
-      }
+    function createBracket(init) {
+      $('div#bracket').bracket({
+        init: init,
+        decorator: {render: render_fn, edit: function () {
+        }},
+        save: function (state, userData) {
+          state.teams = state.teams.map(function (t) {
+            return t.map(function (it) {
+              return {id: it.id, name: it.name}
+            })
+          })
+          srv.PUT("bracket/importDemo", state, dumpResponse)
+        }
+      })
+    }
+
+    $("#importBracket").click(function() {
+      createBracket(bracketInit);
     })
 
     $("input#create").click(function(ev) {
@@ -215,6 +224,14 @@
         }
       })
     }
+
+    srv.GET("bracket", function(response) {
+      if (_.contains(response.keys, "importDemo")) {
+        srv.GET("bracket/importDemo", function(response) {
+          createBracket(response)
+        })
+      }
+    })
 
     srv.GET("group", function(response) {
       if (_.contains(response.keys, "importDemo")) {
@@ -258,7 +275,7 @@
   </div>
   <p>IEM Season VII - World Championship group B, data from <a href="http://wiki.teamliquid.net/starcraft2/IEM_Season_VII_-_World_Championship">Liquipedia</a></p>
 
-  <h2>Edit bracket</h2>
+  <h2>Edit bracket <input type="submit" id="importBracket" value="Import" /></h2>
 
   <div class="wrapper">
     <div id="bracket"></div>
