@@ -124,7 +124,7 @@
     console.log(data)
   }
 
-  function server(serverUrl) {
+  function getApi(serverUrl) {
     if (!serverUrl)
       throw "Server URL required"
     function msg(method, path, data, success) {
@@ -186,15 +186,15 @@
   }
 
   $(function () {
-    var srv = server("http://127.0.0.1:8080/")
+    var api = getApi("http://127.0.0.1:8080/")
 
     ;(function getBrackets() {
       var $created = $("#brackets").empty()
-      srv.listBrackets(function(response) {
+      api.listBrackets(function(response) {
         response.keys.forEach(function(k) {
           $item = $("<li>"+k+"</li>").appendTo($created)
           $item.click(function() {
-            srv.deleteBracket(k, getBrackets)
+            api.deleteBracket(k, getBrackets)
           })
         })
       })
@@ -202,11 +202,11 @@
 
     ;(function getGroups() {
       var $created = $("#groups").empty()
-      srv.listGroups(function(response) {
+      api.listGroups(function(response) {
         response.keys.forEach(function(k) {
           $item = $("<li>"+k+"</li>").appendTo($created)
           $item.click(function() {
-            srv.deleteGroup(k, getGroups)
+            api.deleteGroup(k, getGroups)
           })
         })
       })
@@ -223,7 +223,7 @@
               return {id: it.id, name: it.name}
             })
           })
-          srv.saveBracket("importDemo", state, dumpResponse)
+          api.saveBracket("importDemo", state, dumpResponse)
         }
       })
     }
@@ -235,7 +235,7 @@
     $("input#create").click(function(ev) {
       ev.preventDefault()
       var value = $("select").val()
-      var createFn = value == "bracket" ? srv.createBracket : srv.createGroup
+      var createFn = value == "bracket" ? api.createBracket : api.createGroup
       createFn(function(response) {
         var $container = $('<li></li>').appendTo($('#'+value+'s'))
         var setup = {init: response}
@@ -251,22 +251,22 @@
     function createGroup(init) {
       $('div#group').group({ init: init, labeler: customLabeler,
         save: function (state) {
-          srv.saveGroup("importDemo", state, dumpResponse)
+          api.saveGroup("importDemo", state, dumpResponse)
         }
       })
     }
 
-    srv.listBrackets(function(response) {
+    api.listBrackets(function(response) {
       if (_.contains(response.keys, "importDemo")) {
-        srv.getBracket("importDemo", function(response) {
+        api.getBracket("importDemo", function(response) {
           createBracket(response)
         })
       }
     })
 
-    srv.listGroups(function(response) {
+    api.listGroups(function(response) {
       if (_.contains(response.keys, "importDemo")) {
-        srv.getGroup("importDemo", function(response) {
+        api.getGroup("importDemo", function(response) {
           createGroup(response)
         })
       }
