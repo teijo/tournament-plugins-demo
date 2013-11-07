@@ -124,14 +124,14 @@
     console.log(data)
   }
 
-  function server(url) {
+  function server(serverUrl) {
+    if (!serverUrl)
+      throw "Server URL required"
     function msg(method, path, data, success) {
-      var url = url || "http://127.0.0.1:8080/" + path
+      var requestUrl = serverUrl + path
       var jsonString = JSON.stringify(data);
-      console.log(method + " REQUEST")
-      console.log(jsonString)
       $.ajax({type: method,
-        url: url,
+        url: requestUrl,
         dataType: 'json',
         accept: 'application/json',
         crossDomain: true,
@@ -156,7 +156,7 @@
   }
 
   $(function () {
-    srv = server()
+    srv = server("http://127.0.0.1:8080/")
 
     ;(function getBrackets() {
       var $created = $("#brackets").empty()
