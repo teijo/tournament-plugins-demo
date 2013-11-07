@@ -204,19 +204,19 @@
       })
     })()
 
-    function createBracket(init) {
+    function createBracket(id, init) {
       $('div#bracket').bracket({
         init: init,
         decorator: {render: render_fn, edit: function () {
         }},
         save: function (state, userData) {
-          api.saveBracket("importDemo", state, dumpResponse)
+          api.saveBracket(id, state, dumpResponse)
         }
       })
     }
 
     $("#importBracket").click(function() {
-      createBracket(bracketInit);
+      createBracket("importDemo", bracketInit);
     })
 
     $("input#create").click(function(ev) {
@@ -235,10 +235,10 @@
       })
     })
 
-    function createGroup(init) {
+    function createGroup(id, init) {
       $('div#group').group({ init: init, labeler: customLabeler,
         save: function (state) {
-          api.saveGroup("importDemo", state, dumpResponse)
+          api.saveGroup(id, state, dumpResponse)
         }
       })
     }
@@ -246,7 +246,7 @@
     api.listBrackets(function(response) {
       if (_.contains(response.keys, "importDemo")) {
         api.getBracket("importDemo", function(response) {
-          createBracket(response)
+          createBracket("importDemo", response)
         })
       }
     })
@@ -254,13 +254,13 @@
     api.listGroups(function(response) {
       if (_.contains(response.keys, "importDemo")) {
         api.getGroup("importDemo", function(response) {
-          createGroup(response)
+          createGroup("importDemo", response)
         })
       }
     })
 
     $("#importGroup").click(function() {
-      createGroup(groupInit)
+      createGroup("importDemo", groupInit)
     })
   })
   </script>
