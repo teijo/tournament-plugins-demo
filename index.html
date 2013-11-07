@@ -139,32 +139,62 @@
         success: success
       })
     }
+    function POST(type, data, success) {
+      msg("POST", type, data, success)
+    }
+    function PUT(type, data, success) {
+      msg("PUT", type, data, success)
+    }
+    function GET(type, success) {
+      msg("GET", type, null, success)
+    }
+    function DELETE(type, success) {
+      msg("DELETE", type, null, success)
+    }
     return {
-      POST: function(type, data, success) {
-        msg("POST", type, data, success)
+      createBracket: function(cb) {
+        POST("bracket", {type: "bracket"}, cb)
       },
-      PUT: function(type, data, success) {
-        msg("PUT", type, data, success)
+      createGroup: function(cb) {
+        POST("group", {type: "group"}, cb)
       },
-      GET: function(type, success) {
-        msg("GET", type, null, success)
+      saveBracket: function(id, state, cb) {
+        PUT("bracket/"+id, state, cb)
       },
-      DELETE: function(type, success) {
-        msg("DELETE", type, null, success)
+      saveGroup: function(id, state, cb) {
+        PUT("group/"+id, state, cb)
+      },
+      getBracket: function(id, cb) {
+        GET("bracket/"+id, cb)
+      },
+      getGroup: function(id, cb) {
+        GET("group/"+id, cb)
+      },
+      listBrackets: function(cb)  {
+        GET("bracket", cb)
+      },
+      listGroups: function(cb)  {
+        GET("group", cb)
+      },
+      deleteBracket: function(id, cb) {
+        DELETE("bracket/"+id, cb)
+      },
+      deleteGroup: function(id, cb) {
+        DELETE("group/"+id, cb)
       }
     }
   }
 
   $(function () {
-    srv = server("http://127.0.0.1:8080/")
+    var srv = server("http://127.0.0.1:8080/")
 
     ;(function getBrackets() {
       var $created = $("#brackets").empty()
-      srv.GET("bracket", function(response) {
+      srv.listBrackets(function(response) {
         response.keys.forEach(function(k) {
           $item = $("<li>"+k+"</li>").appendTo($created)
           $item.click(function() {
-            srv.DELETE("bracket/"+k, getBrackets)
+            srv.deleteBracket(k, getBrackets)
           })
         })
       })
@@ -172,11 +202,11 @@
 
     ;(function getGroups() {
       var $created = $("#groups").empty()
-      srv.GET("group", function(response) {
+      srv.listGroups(function(response) {
         response.keys.forEach(function(k) {
           $item = $("<li>"+k+"</li>").appendTo($created)
           $item.click(function() {
-            srv.DELETE("group/"+k, getGroups)
+            srv.deleteGroup(k, getGroups)
           })
         })
       })
@@ -193,7 +223,7 @@
               return {id: it.id, name: it.name}
             })
           })
-          srv.PUT("bracket/importDemo", state, dumpResponse)
+          srv.saveBracket("importDemo", state, dumpResponse)
         }
       })
     }
@@ -205,7 +235,8 @@
     $("input#create").click(function(ev) {
       ev.preventDefault()
       var value = $("select").val()
-      srv.POST(value, {type: value}, function(response) {
+      var createFn = value == "bracket" ? srv.createBracket : srv.createGroup
+      createFn(function(response) {
         var $container = $('<li></li>').appendTo($('#'+value+'s'))
         var setup = {init: response}
         console.log(response)
@@ -220,22 +251,22 @@
     function createGroup(init) {
       $('div#group').group({ init: init, labeler: customLabeler,
         save: function (state) {
-          srv.PUT("group/importDemo", state, dumpResponse)
+          srv.saveGroup("importDemo", state, dumpResponse)
         }
       })
     }
 
-    srv.GET("bracket", function(response) {
+    srv.listBrackets(function(response) {
       if (_.contains(response.keys, "importDemo")) {
-        srv.GET("bracket/importDemo", function(response) {
+        srv.getBracket("importDemo", function(response) {
           createBracket(response)
         })
       }
     })
 
-    srv.GET("group", function(response) {
+    srv.listGroups(function(response) {
       if (_.contains(response.keys, "importDemo")) {
-        srv.GET("group/importDemo", function(response) {
+        srv.getGroup("importDemo", function(response) {
           createGroup(response)
         })
       }
