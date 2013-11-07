@@ -60,12 +60,12 @@
   <script class="demo" type='text/javascript' style="font-size: 90%;"
       >var groupInit = {
     teams: [
-      {id: 10, name: "YoDa", faction: "t" },
-      {id: 11, name: "First", faction: "p" },
-      {id: 12, name: "MC", faction: "p" },
-      {id: 13, name: "Ret", faction: "z" },
-      {id: 14, name: "Kas", faction: "t" },
-      {id: 15, name: "XIorD", faction: "z" }
+      {id: 10, name: "YoDa",  format: "sc2", data: { faction: "t" } },
+      {id: 11, name: "First", format: "sc2", data: { faction: "p" } },
+      {id: 12, name: "MC",    format: "sc2", data: { faction: "p" } },
+      {id: 13, name: "Ret",   format: "sc2", data: { faction: "z" } },
+      {id: 14, name: "Kas",   format: "sc2", data: { faction: "t" } },
+      {id: 15, name: "XIorD", format: "sc2", data: { faction: "z" } }
     ],
     matches: [
       { "id": 0, "round": 1, "a": { "team": 0, "score": 1 }, "b": { "team": 1, "score": 2 } },
@@ -95,7 +95,7 @@
   }
 
   function customLabeler(team) {
-    return faction(team.faction) + ' ' + team.name
+    return faction(team.data.faction) + ' ' + team.name
   }
 
   var bracketInit = {
@@ -210,11 +210,6 @@
         decorator: {render: render_fn, edit: function () {
         }},
         save: function (state, userData) {
-          state.teams = state.teams.map(function (t) {
-            return t.map(function (it) {
-              return {id: it.id, name: it.name}
-            })
-          })
           api.saveBracket("importDemo", state, dumpResponse)
         }
       })
