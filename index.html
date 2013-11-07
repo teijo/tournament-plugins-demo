@@ -127,7 +127,7 @@
   function getApi(serverUrl) {
     if (!serverUrl)
       throw "Server URL required"
-    function msg(method, path, data, success) {
+    function msg(method, data, path, success) {
       var requestUrl = serverUrl + path
       var jsonString = JSON.stringify(data);
       $.ajax({type: method,
@@ -139,30 +139,22 @@
         success: success
       })
     }
-    function POST(type, data, success) {
-      msg("POST", type, data, success)
-    }
-    function PUT(type, data, success) {
-      msg("PUT", type, data, success)
-    }
-    function GET(type, success) {
-      msg("GET", type, null, success)
-    }
-    function DELETE(type, success) {
-      msg("DELETE", type, null, success)
-    }
+    var POST = msg.bind(undefined, "POST")
+    var PUT = msg.bind(undefined, "PUT")
+    var GET = msg.bind(undefined, "GET", null)
+    var DELETE = msg.bind(undefined, "DELETE", null)
     return {
       createBracket: function(cb) {
-        POST("bracket", {type: "bracket"}, cb)
+        POST({type: "bracket"}, "bracket", cb)
       },
       createGroup: function(cb) {
-        POST("group", {type: "group"}, cb)
+        POST({type: "group"}, "group", cb)
       },
       saveBracket: function(id, state, cb) {
-        PUT("bracket/"+id, state, cb)
+        PUT(state, "bracket/"+id, cb)
       },
       saveGroup: function(id, state, cb) {
-        PUT("group/"+id, state, cb)
+        PUT(state, "group/"+id, cb)
       },
       getBracket: function(id, cb) {
         GET("bracket/"+id, cb)
