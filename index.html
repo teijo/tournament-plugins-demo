@@ -143,12 +143,17 @@
     var PUT = msg.bind(undefined, "PUT")
     var GET = msg.bind(undefined, "GET", null)
     var DELETE = msg.bind(undefined, "DELETE", null)
+    function parseCreate(cb) {
+      return function(response) {
+        cb(response.id, response.data)
+      }
+    }
     return {
       createBracket: function(cb) {
-        POST({type: "bracket"}, "bracket", cb)
+        POST({type: "bracket"}, "bracket", parseCreate(cb))
       },
       createGroup: function(cb) {
-        POST({type: "group"}, "group", cb)
+        POST({type: "group"}, "group", parseCreate(cb))
       },
       saveBracket: function(id, state, cb) {
         PUT(state, "bracket/"+id, cb)
@@ -223,14 +228,22 @@
       ev.preventDefault()
       var value = $("select").val()
       var createFn = value == "bracket" ? api.createBracket : api.createGroup
-      createFn(function(response) {
+      createFn(function(id, response) {
         var $container = $('<li></li>').appendTo($('#'+value+'s'))
         var setup = {init: response}
         console.log(response)
         if (value === 'bracket') {
-          $container.bracket($.extend(setup, {save: function(){}}))
+          $container.bracket($.extend(setup, {
+            save: function (state) {
+              api.saveGroup(id, state, dumpResponse)
+            }
+          }))
         } else if (value === 'group') {
-          $container.group($.extend(setup, {save: function(){}}))
+          $container.group($.extend(setup, {
+            save: function (state, userData) {
+              api.saveBracket(id, state, dumpResponse)
+            }
+          }))
         }
       })
     })
