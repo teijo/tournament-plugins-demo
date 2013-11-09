@@ -231,7 +231,6 @@
       createFn(function(id, response) {
         var $container = $('<li></li>').appendTo($('#'+value+'s'))
         var setup = {init: response}
-        console.log(response)
         if (value === 'bracket') {
           $container.bracket($.extend(setup, {
             save: function (state) {
