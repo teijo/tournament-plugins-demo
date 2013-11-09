@@ -189,8 +189,17 @@
       var $created = $("#brackets").empty()
       api.listBrackets(function(response) {
         response.keys.forEach(function(k) {
-          $item = $("<li>"+k+"</li>").appendTo($created)
-          $item.click(function() {
+          api.getBracket(k, function(response) {
+            $item = $("<li></li>").appendTo($created)
+            $item.bracket({
+              init: response,
+              save: function (state) {
+                api.saveBracket(k, state, dumpResponse)
+              }
+            })
+          })
+          $del = $("<li>"+k+"</li>").appendTo($created)
+          $del.click(function() {
             api.deleteBracket(k, getBrackets)
           })
         })
@@ -201,8 +210,19 @@
       var $created = $("#groups").empty()
       api.listGroups(function(response) {
         response.keys.forEach(function(k) {
-          $item = $("<li>"+k+"</li>").appendTo($created)
-          $item.click(function() {
+
+          api.getGroup(k, function(response) {
+            $item = $("<li></li>").appendTo($created)
+            $item.group({
+              init: response,
+              save: function (state) {
+                api.saveGroup(k, state, dumpResponse)
+              }
+            })
+          })
+
+          $del = $("<li>"+k+"</li>").appendTo($created)
+          $del.click(function() {
             api.deleteGroup(k, getGroups)
           })
         })
