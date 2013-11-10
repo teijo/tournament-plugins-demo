@@ -240,14 +240,7 @@
     })()
 
     function createBracket(id, init) {
-      $('div#bracket').bracket({
-        init: init,
-        decorator: {render: render_fn, edit: function () {
-        }},
-        save: function (state, userData) {
-          api.saveBracket(id, state, dumpResponse)
-        }
-      })
+      api.saveBracket(id, init, dumpResponse)
     }
 
     $("#importBracket").click(function() {
@@ -277,14 +270,6 @@
       })
     })
 
-    function createGroup(id, init) {
-      $('div#group').group({ init: init, labeler: customLabeler,
-        save: function (state) {
-          api.saveGroup(id, state, dumpResponse)
-        }
-      })
-    }
-
     api.listBrackets(function(response) {
       if (_.contains(response.keys, "importDemo")) {
         api.getBracket("importDemo", function(response) {
@@ -293,16 +278,8 @@
       }
     })
 
-    api.listGroups(function(response) {
-      if (_.contains(response.keys, "importDemo")) {
-        api.getGroup("importDemo", function(response) {
-          createGroup("importDemo", response)
-        })
-      }
-    })
-
     $("#importGroup").click(function() {
-      createGroup("importDemo", groupInit)
+      api.saveGroup("importDemo", groupInit, dumpResponse)
     })
   })
   </script>
@@ -330,16 +307,9 @@
 
   <h2>Edit group stage <input type="submit" id="importGroup" value="Import example" /></h2>
 
-  <div class="wrapper">
-    <div id="group"></div>
-  </div>
   <p>IEM Season VII - World Championship group B, data from <a href="http://wiki.teamliquid.net/starcraft2/IEM_Season_VII_-_World_Championship">Liquipedia</a></p>
 
   <h2>Edit bracket <input type="submit" id="importBracket" value="Import example" /></h2>
-
-  <div class="wrapper">
-    <div id="bracket"></div>
-  </div>
 </article>
 </body>
 </html>
