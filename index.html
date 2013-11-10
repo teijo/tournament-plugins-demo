@@ -141,7 +141,7 @@
   $(function () {
     var api = getApi("http://127.0.0.1:8080/")
 
-    ;(function getBrackets() {
+    function getBrackets() {
       var $created = $("#brackets").empty()
       api.listBrackets(function(response) {
         response.keys.forEach(function(k) {
@@ -161,9 +161,9 @@
           })
         })
       })
-    })()
+    }
 
-    ;(function getGroups() {
+    function getGroups() {
       var $created = $("#groups").empty()
       api.listGroups(function(response) {
         response.keys.forEach(function(k) {
@@ -185,41 +185,26 @@
 
         })
       })
-    })()
-
-    function createBracket(id, init) {
-      api.saveBracket(id, init, dumpResponse)
     }
 
-    $("#importBracket").click(function() {
-      createBracket("importDemo", bracketInit);
-    })
+    getBrackets()
+    getGroups()
 
     $("input#create").click(function(ev) {
       ev.preventDefault()
       var value = $("select").val()
-      var createFn = value == "bracket" ? api.createBracket : api.createGroup
-      createFn(function(id, response) {
-        var $container = $('<dd></dd>').appendTo($('#'+value+'s'))
-        var setup = {init: response}
-        if (value === 'bracket') {
-          $container.bracket($.extend(setup, {
-            save: function (state) {
-              api.saveGroup(id, state, dumpResponse)
-            }
-          }))
-        } else if (value === 'group') {
-          $container.group($.extend(setup, {
-            save: function (state, userData) {
-              api.saveBracket(id, state, dumpResponse)
-            }
-          }))
-        }
-      })
+      if (value == "bracket")
+        api.createBracket(getBrackets)
+      else
+        api.createGroup(getGroups)
+    })
+
+    $("#importBracket").click(function() {
+      api.saveBracket("importDemo", bracketInit, getBrackets)
     })
 
     $("#importGroup").click(function() {
-      api.saveGroup("importDemo", groupInit, dumpResponse)
+      api.saveGroup("importDemo", groupInit, getGroups)
     })
   })
   </script>
