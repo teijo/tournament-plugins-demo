@@ -42,6 +42,12 @@
       width: 100%;
     }
 
+    dt:hover {
+      color: red;
+      text-decoration: underline;
+      cursor: pointer;
+    }
+
     .rounds {
       display: none;
     }
@@ -146,7 +152,7 @@
       api.listBrackets(function(response) {
         response.keys.forEach(function(k) {
           api.getBracket(k, function(response) {
-            $del = $("<dt>"+k+"</dt>").appendTo($created)
+            $del = $("<dt>ID: "+k+" (delete)</dt>").appendTo($created)
             $del.click(function() {
               api.deleteBracket(k, getBrackets)
             })
