@@ -31,7 +31,12 @@
       clear: both;
     }
 
-    #group .rounds {
+    ul {
+      padding: 0;
+      list-style: none;
+    }
+
+    .rounds {
       display: none;
     }
 
@@ -193,6 +198,10 @@
       api.listBrackets(function(response) {
         response.keys.forEach(function(k) {
           api.getBracket(k, function(response) {
+            $del = $("<li>"+k+"</li>").appendTo($created)
+            $del.click(function() {
+              api.deleteBracket(k, getBrackets)
+            })
             $item = $("<li></li>").appendTo($created)
             $item.bracket({
               init: response,
@@ -201,10 +210,6 @@
                 api.saveBracket(k, state, dumpResponse)
               }
             })
-          })
-          $del = $("<li>"+k+"</li>").appendTo($created)
-          $del.click(function() {
-            api.deleteBracket(k, getBrackets)
           })
         })
       })
@@ -216,6 +221,10 @@
         response.keys.forEach(function(k) {
 
           api.getGroup(k, function(response) {
+            $del = $("<li>ID: "+k+" (delete)</li>").appendTo($created)
+            $del.click(function() {
+              api.deleteGroup(k, getGroups)
+            })
             $item = $("<li></li>").appendTo($created)
             $item.group({
               init: response,
@@ -226,10 +235,6 @@
             })
           })
 
-          $del = $("<li>"+k+"</li>").appendTo($created)
-          $del.click(function() {
-            api.deleteGroup(k, getGroups)
-          })
         })
       })
     })()
