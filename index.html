@@ -32,9 +32,14 @@
       clear: both;
     }
 
-    ul {
-      padding: 0;
-      list-style: none;
+    dl {
+      clear: both;
+    }
+
+    dd {
+      margin: 0;
+      float: left;
+      width: 100%;
     }
 
     .rounds {
@@ -141,11 +146,11 @@
       api.listBrackets(function(response) {
         response.keys.forEach(function(k) {
           api.getBracket(k, function(response) {
-            $del = $("<li>"+k+"</li>").appendTo($created)
+            $del = $("<dt>"+k+"</dt>").appendTo($created)
             $del.click(function() {
               api.deleteBracket(k, getBrackets)
             })
-            $item = $("<li></li>").appendTo($created)
+            $item = $("<dd></dd>").appendTo($created)
             $item.bracket({
               init: response,
               decorator: {render: render_fn, edit: function () {}},
@@ -164,11 +169,11 @@
         response.keys.forEach(function(k) {
 
           api.getGroup(k, function(response) {
-            $del = $("<li>ID: "+k+" (delete)</li>").appendTo($created)
+            $del = $("<dt>ID: "+k+" (delete)</dt>").appendTo($created)
             $del.click(function() {
               api.deleteGroup(k, getGroups)
             })
-            $item = $("<li></li>").appendTo($created)
+            $item = $("<dd></dd>").appendTo($created)
             $item.group({
               init: response,
               labeler: customLabeler,
@@ -195,7 +200,7 @@
       var value = $("select").val()
       var createFn = value == "bracket" ? api.createBracket : api.createGroup
       createFn(function(id, response) {
-        var $container = $('<li></li>').appendTo($('#'+value+'s'))
+        var $container = $('<dd></dd>').appendTo($('#'+value+'s'))
         var setup = {init: response}
         if (value === 'bracket') {
           $container.bracket($.extend(setup, {
@@ -235,16 +240,12 @@
   </form>
 
   <h3>Existing (click to delete)</h3>
-  <h4>Groups</h4>
-  <ul id="groups"></ul>
-  <h4>Brackets</h4>
-  <ul id="brackets"></ul>
+  <h4>Groups <input type="submit" id="importGroup" value="Import example" /></h4>
+  <dl id="groups"></dl>
+  <h4>Brackets <input type="submit" id="importBracket" value="Import example" /></h4>
+  <dl id="brackets"></dl>
 
-  <h2>Edit group stage <input type="submit" id="importGroup" value="Import example" /></h2>
-
-  <p>IEM Season VII - World Championship group B, data from <a href="http://wiki.teamliquid.net/starcraft2/IEM_Season_VII_-_World_Championship">Liquipedia</a></p>
-
-  <h2>Edit bracket <input type="submit" id="importBracket" value="Import example" /></h2>
+  <small>IEM Season VII - World Championship group B, data from <a href="http://wiki.teamliquid.net/starcraft2/IEM_Season_VII_-_World_Championship">Liquipedia</a></small>
 </article>
 </body>
 </html>
