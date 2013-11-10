@@ -95,7 +95,10 @@
   }
 
   function customLabeler(team) {
-    return faction(team.data.faction) + ' ' + team.name
+    if (team.data)
+      return faction(team.data.faction) + ' ' + team.name
+    else
+      return team.name
   }
 
   var bracketInit = {
@@ -193,6 +196,7 @@
             $item = $("<li></li>").appendTo($created)
             $item.bracket({
               init: response,
+              decorator: {render: render_fn, edit: function () {}},
               save: function (state) {
                 api.saveBracket(k, state, dumpResponse)
               }
@@ -215,6 +219,7 @@
             $item = $("<li></li>").appendTo($created)
             $item.group({
               init: response,
+              labeler: customLabeler,
               save: function (state) {
                 api.saveGroup(k, state, dumpResponse)
               }
