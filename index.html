@@ -144,12 +144,22 @@
     console.log(data)
   }
 
+  var genTeamId = 0
+  function mkTeam(data) {
+    return {
+      id: data.id ? data.id : ++genTeamId,
+      name: data.name ? data.name : null,
+      format: data.format ? data.format : null,
+      data: data.data ? data.data : {}
+    }
+  }
+
   function edit_fn(container, data, doneCb) {
     var input = $('<input type="text">')
     input.val(data.name)
     container.html(input)
     input.focus()
-    input.blur(function() { data.name = input.val(); doneCb(data)})
+    input.blur(function() { data.name = input.val(); doneCb(mkTeam(data))})
   }
 
   $(function () {
