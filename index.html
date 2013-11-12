@@ -112,7 +112,7 @@
   }
 
   function customLabeler(team) {
-    if (team.data)
+    if (team.format === "sc2")
       return faction(team.data.faction) + ' ' + team.name
     else
       return team.name
