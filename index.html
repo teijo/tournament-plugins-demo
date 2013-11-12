@@ -144,6 +144,14 @@
     console.log(data)
   }
 
+  function edit_fn(container, data, doneCb) {
+    var input = $('<input type="text">')
+    input.val(data.name)
+    container.html(input)
+    input.focus()
+    input.blur(function() { data.name = input.val(); doneCb(data)})
+  }
+
   $(function () {
     var api = getApi("http://127.0.0.1:8080/")
 
@@ -159,7 +167,7 @@
             $item = $("<dd></dd>").appendTo($created)
             $item.bracket({
               init: response,
-              decorator: {render: render_fn, edit: function () {}},
+              decorator: {render: render_fn, edit: edit_fn},
               save: function (state) {
                 api.saveBracket(k, state, dumpResponse)
               }
