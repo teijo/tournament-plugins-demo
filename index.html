@@ -141,6 +141,8 @@
             })
           })
         })
+      }, function(response) {
+        $created.text("Failed to load bracket list")
       })
     }
 
@@ -165,6 +167,8 @@
           })
 
         })
+      }, function(response) {
+        $created.text("Failed to load group list")
       })
     }
 

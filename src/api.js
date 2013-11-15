@@ -1,7 +1,9 @@
 function getApi(serverUrl) {
   if (!serverUrl)
     throw "Server URL required"
-  function msg(method, data, path, success) {
+
+  function msg(method, data, path, success, error) {
+    error = error || function() {}
     var requestUrl = serverUrl + path
     var jsonString = JSON.stringify(data);
     $.ajax({type: method,
@@ -10,7 +12,8 @@ function getApi(serverUrl) {
       accept: 'application/json',
       crossDomain: true,
       data: jsonString,
-      success: success
+    }).done(success).fail(function(jqXHR, textStatus) {
+      error(textStatus)
     })
   }
 
@@ -44,11 +47,11 @@ function getApi(serverUrl) {
     getGroup: function (id, cb) {
       GET("group/" + id, cb)
     },
-    listBrackets: function (cb) {
-      GET("bracket", cb)
+    listBrackets: function (success, error) {
+      GET("bracket", success, error)
     },
-    listGroups: function (cb) {
-      GET("group", cb)
+    listGroups: function (success, error) {
+      GET("group", success, error)
     },
     deleteBracket: function (id, cb) {
       DELETE("bracket/" + id, cb)
