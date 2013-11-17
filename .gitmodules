@@ -4,3 +4,6 @@
 [submodule "jquery-bracket"]
 	path = jquery-bracket
 	url = git@github.com:teijo/jquery-bracket.git
+[submodule "tcli"]
+	path = tcli
+	url = git@github.com:teijo/tcli.git
